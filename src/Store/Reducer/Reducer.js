@@ -4,13 +4,17 @@ const initialState = {
   step: 1,
   genres: genres.genres,
   selectedGenreId: null,
-  selectedSubgenreId: null
+  selectedSubgenreId: null,
+  subgenreTitle: '',
+  subgenreDescription: false
 };
 
 const SELECT_GENRE = 'SELECT_GENRE';
 const SELECT_SUBGENRE = 'SELECT_SUBGENRE';
 const NEXT_STEP = 'NEXT_STEP';
 const PREV_STEP = 'PREV_STEP';
+const SUBGENRE_TITLE = 'SUBGENRE_TITLE';
+const SUBGENRE_DESC = 'SUBGENRE_DESC';
 
 export function selectGenre (data) {
   return {
@@ -34,6 +38,17 @@ export function prevStep () {
     type: PREV_STEP
   }
 }
+export function handleSubgenreTitle (data) {
+  return {
+    type: SUBGENRE_TITLE,
+    data
+  }
+}
+export function handleDescription () {
+  return {
+    type: SUBGENRE_DESC
+  }
+}
 
 function reducer(state = initialState, action) {
   console.log('reducer', state, action, genres);
@@ -45,8 +60,10 @@ function reducer(state = initialState, action) {
 
       if (newState.selectedGenreId !== data.id) {
         newState.selectedGenreId = data.id;
+        newState.selectedSubgenreId = null;
       } else {
         newState.selectedGenreId = null;
+        newState.selectedSubgenreId = null;
       }
 
       return newState;
@@ -67,8 +84,13 @@ function reducer(state = initialState, action) {
     case NEXT_STEP: {
       console.log(action, 'action NEXT_STEP');
       let newState = {...state};
-
-      newState.step = newState.step + 1;
+      if (newState.step === 2 && newState.selectedSubgenreId === 'createSubgenre') {
+        newState.step = 3;
+      } else if (newState.step === 2 && newState.selectedSubgenreId !== 'createSubgenre') {
+        newState.step = 4;
+      } else {
+        newState.step = newState.step + 1;
+      }
 
       return newState;
     }
@@ -77,6 +99,20 @@ function reducer(state = initialState, action) {
       let newState = {...state};
 
       newState.step = newState.step - 1;
+
+      return newState;
+    }
+    case SUBGENRE_TITLE: {
+      console.log(action, 'SUBGENRE_TITLE');
+      let newState = {...state};
+      newState.subgenreTitle = action.data;
+
+      return newState;
+    }
+    case SUBGENRE_DESC: {
+      console.log(action, 'SUBGENRE_DESC');
+      let newState = {...state};
+      newState.subgenreDescription = !newState.subgenreDescription;
 
       return newState;
     }

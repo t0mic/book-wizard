@@ -4,14 +4,24 @@ import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import ChooseGenre from '../ChooseGenre/ChooseGenre';
 // import ChooseSubgenre from '../ChooseSubgenre/ChooseSubgenre';
-import {selectGenre, nextStep, prevStep, selectSubgenre} from '../../Store/Reducer/Reducer';
+import CreateSubgenre from '../CreateSubgenre/CreateSubgenre';
+import Information from '../Information/Information';
+import {selectGenre, nextStep, prevStep, selectSubgenre, handleSubgenreTitle, handleDescription} from '../../Store/Reducer/Reducer';
 
 class FormHolder extends Component {
   renderSteps = () => {
-    const {state: {step, genres, selectedGenreId, selectedSubgenreId}, selectGenre, selectSubgenre} = this.props;
-    let subgenres = [];
+    const {state: {step, genres, selectedGenreId, selectedSubgenreId, subgenreTitle, subgenreDescription}, nextStep, prevStep, selectGenre, selectSubgenre, handleSubgenreTitle, handleDescription} = this.props;
+    let subgenres = [{
+      id: 'createSubgenre',
+      name: 'Add New'
+    }];
     if (selectedGenreId) {
-      subgenres = genres.filter(g => g.id === selectedGenreId)[0].subgenres;
+      let subgenresFiltered = genres.filter(g => g.id === selectedGenreId)[0].subgenres;
+      subgenres = [...subgenresFiltered, ...subgenres]
+      // subgenres.push({
+      //   id: 'createSubgenre',
+      //   name: 'Add New'
+      // })
     }
     console.log(subgenres, 'subgenres')
 
@@ -19,18 +29,49 @@ class FormHolder extends Component {
       case 1:
         return (
           <ChooseGenre 
+            step={step}
             genres={genres} 
             selectGenre={selectGenre} 
             selectedGenreId={selectedGenreId}
+            nextStep={nextStep}
+            prevStep={prevStep}
           />
         );
       case 2:
         return (
           <ChooseGenre 
+            step={step}
             genres={subgenres} 
             selectGenre={selectSubgenre} 
             selectedGenreId={selectedSubgenreId}
+            subgenre
+            nextStep={nextStep}
+            prevStep={prevStep}
           />
+        );
+      case 3:
+        return (
+          <CreateSubgenre
+            subgenreTitle={subgenreTitle}
+            handleSubgenreTitle={handleSubgenreTitle}
+            subgenreDescription={subgenreDescription}
+            handleDescription={handleDescription}
+            step={step}
+            nextStep={nextStep}
+            prevStep={prevStep}
+           />
+        );
+      case 4:
+        return (
+          <Information
+            // subgenreTitle={subgenreTitle}
+            // handleSubgenreTitle={handleSubgenreTitle}
+            // subgenreDescription={subgenreDescription}
+            // handleDescription={handleDescription}
+            step={step}
+            nextStep={nextStep}
+            prevStep={prevStep}
+           />
         );
       default: 
         return (<h1>Default view</h1>);
@@ -44,10 +85,10 @@ class FormHolder extends Component {
     return (
       <Container maxWidth="md">
         {/* header with counter */}
-        <h1>This will be our app</h1>
+        <h1>Step: {step}</h1>
         {this.renderSteps()}
         {/* buttons */}
-        <div>
+        {/* <div>
         <Button 
           onClick={prevStep}
           variant="contained"
@@ -61,7 +102,7 @@ class FormHolder extends Component {
           disabled={!selectedGenreId}>
           Next
         </Button>
-        </div>
+        </div> */}
       </Container>
     );
   }
@@ -79,6 +120,8 @@ function mapDispatchToProps(dispatch) {
     selectSubgenre: () => dispatch(selectSubgenre()),
     nextStep: () => dispatch(nextStep()),
     prevStep: () => dispatch(prevStep()),
+    handleSubgenreTitle: () => dispatch(handleSubgenreTitle()),
+    handleDescription: () => dispatch(handleDescription()),
    };
 }
 
@@ -88,6 +131,8 @@ const dispatchToProps = {
   selectSubgenre,
   nextStep,
   prevStep,
+  handleSubgenreTitle,
+  handleDescription,
 }
 
 export default connect(mapStateToProps, dispatchToProps)(FormHolder);
