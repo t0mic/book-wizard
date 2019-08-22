@@ -18,6 +18,7 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
+import styles from './Information.css';
 
 class Information extends Component {
 
@@ -27,41 +28,44 @@ class Information extends Component {
     return (
       <Fragment>
         <Grid container spacing={3}>
+          <form className={styles.form}>
           <Grid>
             <TextField
               id="bookName"
-              label="Book Name"
+              label="Book Title"
               // className={classes.textField}
               value=""
               type="text"
               name="subgenreName"
               margin="normal"
               variant="outlined"
+              fullWidth
             />
           </Grid>
           <Grid>
             <TextField
-              id="bookName"
-              label="Book Name"
+              id="bookAuthor"
+              label="Author"
               // className={classes.textField}
               value=""
               type="text"
               name="subgenreName"
               margin="normal"
               variant="outlined"
+              fullWidth
             />
           </Grid>
-          <FormControl variant="outlined">
+          <FormControl fullWidth variant="outlined">
             <InputLabel 
             // ref={inputLabel} 
             htmlFor="book-author">
-              Age
+              Author
             </InputLabel>
             <Select
               native
               input={
                 <OutlinedInput 
-                  name="age" 
+                  name="author" 
                   // labelWidth={labelWidth} 
                   id="book-author" />
               }
@@ -74,6 +78,7 @@ class Information extends Component {
           </FormControl>
           <Grid>
             <TextField
+              fullWidth
               id="isbn"
               label="ISBN"
               // className={classes.textField}
@@ -84,7 +89,7 @@ class Information extends Component {
               variant="outlined"
             />
           </Grid>
-          <FormControl variant="outlined">
+          <FormControl fullWidth variant="outlined">
             <InputLabel 
             // ref={inputLabel} 
             htmlFor="book-publisher">
@@ -112,7 +117,7 @@ class Information extends Component {
             format="MM/dd/yyyy"
             margin="normal"
             id="date-picker-inline"
-            label="Date picker inline"
+            label="Date published"
             value={new Date()}
             // onChange={handleDateChange}
             KeyboardButtonProps={{
@@ -130,15 +135,17 @@ class Information extends Component {
               name="pagenum"
               margin="normal"
               variant="outlined"
+              style={{minWidth: 180}}
             />
           </Grid>
-          <FormControl variant="outlined">
+          <FormControl classes={styles.formatWidth} style={{minWidth: 240}} variant="outlined">
             <InputLabel 
             // ref={inputLabel} 
             htmlFor="format">
               Format
             </InputLabel>
             <Select
+              fullWidth
               native
               input={
                 <OutlinedInput 
@@ -155,6 +162,7 @@ class Information extends Component {
           </FormControl>
           <Grid>
             <TextField
+              style={{minWidth: 240, marginRight: 30}}
               id="edition"
               label="Edition"
               // className={classes.textField}
@@ -164,8 +172,7 @@ class Information extends Component {
               margin="normal"
               variant="outlined"
             />
-          </Grid>
-          <FormControl variant="outlined">
+            <FormControl margin="normal" variant="outlined" style={{minWidth: 240}}>
             <InputLabel 
             // ref={inputLabel} 
             htmlFor="edition-language">
@@ -186,6 +193,29 @@ class Information extends Component {
               <option value={30}>Thirty</option>
             </Select>
           </FormControl>
+          </Grid>
+          {/* <FormControl variant="outlined">
+            <InputLabel 
+            // ref={inputLabel} 
+            htmlFor="edition-language">
+              Edition Language
+            </InputLabel>
+            <Select
+              native
+              input={
+                <OutlinedInput 
+                  name="Format" 
+                  // labelWidth={labelWidth} 
+                  id="edition-language" />
+              }
+            >
+              <option value="" />
+              <option value={10}>Ten</option>
+              <option value={20}>Twenty</option>
+              <option value={30}>Thirty</option>
+            </Select>
+          </FormControl> */}
+        </form>
         </Grid>
         <ControlButtons 
           step={step}

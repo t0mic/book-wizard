@@ -1,0 +1,14 @@
+.form {
+  display: 'flex';
+  flex-wrap: 'wrap';
+  width: 100%;
+}
+.fullWidth {
+  width: 100%;
+}
+.formatWidth {
+  width: 240px;
+}
+.numberWidth {
+  width: 180px;
+}

@@ -26,7 +26,7 @@ class FormHolder extends Component {
     console.log(subgenres, 'subgenres')
 
     switch(step) {
-      case 1:
+      case 4:
         return (
           <ChooseGenre 
             step={step}
@@ -61,7 +61,7 @@ class FormHolder extends Component {
             prevStep={prevStep}
            />
         );
-      case 4:
+      case 1:
         return (
           <Information
             // subgenreTitle={subgenreTitle}
