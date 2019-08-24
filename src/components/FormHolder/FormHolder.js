@@ -1,37 +1,87 @@
-import React, {Component} from 'react';
-import { connect } from 'react-redux';
-import Container from '@material-ui/core/Container';
-import Button from '@material-ui/core/Button';
-import ChooseGenre from '../ChooseGenre/ChooseGenre';
-// import ChooseSubgenre from '../ChooseSubgenre/ChooseSubgenre';
-import CreateSubgenre from '../CreateSubgenre/CreateSubgenre';
-import Information from '../Information/Information';
-import {selectGenre, nextStep, prevStep, selectSubgenre, handleSubgenreTitle, handleDescription} from '../../Store/Reducer/Reducer';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import Container from "@material-ui/core/Container";
+import ChooseGenre from "../ChooseGenre/ChooseGenre";
+import CreateSubgenre from "../CreateSubgenre/CreateSubgenre";
+import Information from "../Information/Information";
+import SuccessfullyAdded from "../SuccessfullyAdded/SuccessfullyAdded";
+import {
+  selectGenre,
+  nextStep,
+  prevStep,
+  selectSubgenre,
+  handleSubgenreTitle,
+  handleDescription,
+  handleInputChange,
+  handleDescriptionText,
+  handleDateChange,
+  handleResetState
+} from "../../Store/Reducer/Reducer";
 
 class FormHolder extends Component {
+  state = {
+    pageWidth: window.innerWidth
+  };
+  componentDidMount() {
+    window.addEventListener("resize", () => {
+      this.setState({
+        pageWidth: window.innerWidth
+      });
+    });
+  }
+  componentWillUnmount() {
+    window.removeEventListener("resize");
+  }
   renderSteps = () => {
-    const {state: {step, genres, selectedGenreId, selectedSubgenreId, subgenreTitle, subgenreDescription}, nextStep, prevStep, selectGenre, selectSubgenre, handleSubgenreTitle, handleDescription} = this.props;
-    let subgenres = [{
-      id: 'createSubgenre',
-      name: 'Add New'
-    }];
+    const {
+      state: {
+        step,
+        genres,
+        selectedGenreId,
+        selectedSubgenreId,
+        subgenreTitle,
+        subgenreDescription,
+        informationForm
+      },
+      nextStep,
+      prevStep,
+      selectGenre,
+      selectSubgenre,
+      handleSubgenreTitle,
+      handleDescription,
+      handleInputChange,
+      handleDescriptionText,
+      handleDateChange,
+      handleResetState
+    } = this.props;
+    const { pageWidth } = this.state;
+    let subgenres = [
+      {
+        id: "createSubgenre",
+        name: "Add New"
+      }
+    ];
+    let showDesc = false;
     if (selectedGenreId) {
-      let subgenresFiltered = genres.filter(g => g.id === selectedGenreId)[0].subgenres;
-      subgenres = [...subgenresFiltered, ...subgenres]
-      // subgenres.push({
-      //   id: 'createSubgenre',
-      //   name: 'Add New'
-      // })
+      let subgenresFiltered = genres.find(g => g.id === selectedGenreId)
+        .subgenres;
+      subgenres = [...subgenresFiltered, ...subgenres];
     }
-    console.log(subgenres, 'subgenres')
+    if (selectedSubgenreId && selectedSubgenreId !== "createSubgenre") {
+      showDesc = subgenres.find(s => s.id === selectedSubgenreId)
+        .isDescriptionRequired;
+    }
+    if (selectedSubgenreId && selectedSubgenreId === "createSubgenre") {
+      showDesc = subgenreDescription;
+    }
 
-    switch(step) {
-      case 4:
+    switch (step) {
+      case 1:
         return (
-          <ChooseGenre 
+          <ChooseGenre
             step={step}
-            genres={genres} 
-            selectGenre={selectGenre} 
+            genres={genres}
+            selectGenre={selectGenre}
             selectedGenreId={selectedGenreId}
             nextStep={nextStep}
             prevStep={prevStep}
@@ -39,10 +89,10 @@ class FormHolder extends Component {
         );
       case 2:
         return (
-          <ChooseGenre 
+          <ChooseGenre
             step={step}
-            genres={subgenres} 
-            selectGenre={selectSubgenre} 
+            genres={subgenres}
+            selectGenre={selectSubgenre}
             selectedGenreId={selectedSubgenreId}
             subgenre
             nextStep={nextStep}
@@ -59,50 +109,39 @@ class FormHolder extends Component {
             step={step}
             nextStep={nextStep}
             prevStep={prevStep}
-           />
+          />
         );
-      case 1:
+      case 4:
         return (
           <Information
-            // subgenreTitle={subgenreTitle}
-            // handleSubgenreTitle={handleSubgenreTitle}
-            // subgenreDescription={subgenreDescription}
-            // handleDescription={handleDescription}
+            pageWidth={pageWidth}
             step={step}
             nextStep={nextStep}
             prevStep={prevStep}
-           />
+            informationForm={informationForm}
+            handleInputChange={handleInputChange}
+            handleDescriptionText={handleDescriptionText}
+            handleDateChange={handleDateChange}
+            showDesc={showDesc}
+          />
         );
-      default: 
-        return (<h1>Default view</h1>);
+      case 5:
+        return <SuccessfullyAdded handleResetState={handleResetState} />;
+      default:
+        return <h1>Default view</h1>;
     }
-  }
+  };
 
-  render () {
-    console.log(this.props, 'props')
-    const {state: {step, selectedGenreId}, prevStep, nextStep} = this.props;
+  render() {
+    const {
+      state: { step }
+    } = this.props;
 
     return (
       <Container maxWidth="md">
         {/* header with counter */}
         <h1>Step: {step}</h1>
         {this.renderSteps()}
-        {/* buttons */}
-        {/* <div>
-        <Button 
-          onClick={prevStep}
-          variant="contained"
-          disabled={step === 1}>
-          Back
-        </Button>
-        <Button 
-          onClick={nextStep}
-          variant="contained"
-          color="primary"
-          disabled={!selectedGenreId}>
-          Next
-        </Button>
-        </div> */}
       </Container>
     );
   }
@@ -112,7 +151,7 @@ function mapStateToProps(state) {
   return {
     state: state
   };
-};
+}
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -122,17 +161,28 @@ function mapDispatchToProps(dispatch) {
     prevStep: () => dispatch(prevStep()),
     handleSubgenreTitle: () => dispatch(handleSubgenreTitle()),
     handleDescription: () => dispatch(handleDescription()),
-   };
+    handleInputChange: () => dispatch(handleInputChange()),
+    handleDescriptionText: () => dispatch(handleDescriptionText()),
+    handleDateChange: () => dispatch(handleDateChange()),
+    handleResetState: () => dispatch(handleResetState())
+  };
 }
 
 const dispatchToProps = {
-  mapDispatchToProps, 
+  mapDispatchToProps,
   selectGenre,
   selectSubgenre,
   nextStep,
   prevStep,
   handleSubgenreTitle,
   handleDescription,
-}
+  handleInputChange,
+  handleDescriptionText,
+  handleDateChange,
+  handleResetState
+};
 
-export default connect(mapStateToProps, dispatchToProps)(FormHolder);
+export default connect(
+  mapStateToProps,
+  dispatchToProps
+)(FormHolder);

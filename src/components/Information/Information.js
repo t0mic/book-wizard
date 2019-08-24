@@ -1,227 +1,278 @@
-import React, {Component, Fragment} from 'react';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import ControlButtons from '../ControlButtons/ControlButtons';
-import Input from '@material-ui/core/Input';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import FilledInput from '@material-ui/core/FilledInput';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import NativeSelect from '@material-ui/core/NativeSelect';
-import DateFnsUtils from '@date-io/date-fns';
+import React, { Component, Fragment } from "react";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import ControlButtons from "../ControlButtons/ControlButtons";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-import styles from './Information.css';
+  KeyboardDatePicker
+} from "@material-ui/pickers";
+import { Editor } from "react-draft-wysiwyg";
+import { EditorState, convertToRaw } from "draft-js";
+import draftToMarkdown from "draftjs-to-markdown";
+import {
+  bookLanguages,
+  bookFormats,
+  bookPublishers,
+  bookAuthors
+} from "../../Store/genres";
+import styles from "./Information.css";
 
 class Information extends Component {
+  constructor(props) {
+    super(props);
 
-  render () {
-    // const inputLabel = React.useRef(null);
-    const {step, nextStep, prevStep} = this.props;
+    this.state = {
+      date: new Date(),
+      editorState: EditorState.createEmpty()
+    };
+  }
+
+  handleInput = e => {
+    this.props.handleInputChange({ name: e.target.name, val: e.target.value });
+  };
+
+  render() {
+    const {
+      step,
+      nextStep,
+      prevStep,
+      informationForm: {
+        bookTitle,
+        author,
+        isbn,
+        publisher,
+        publishDate,
+        pagenum,
+        format,
+        edition,
+        editionLagnuage,
+        description
+      },
+      pageWidth,
+      handleDescriptionText,
+      handleDateChange,
+      showDesc
+    } = this.props;
+    const disable =
+      bookTitle &&
+      author &&
+      isbn &&
+      publisher &&
+      pagenum &&
+      format &&
+      edition &&
+      editionLagnuage;
+    const hasDesc =
+      draftToMarkdown(convertToRaw(description.getCurrentContent())).length > 1;
+    const disabled = showDesc ? !(disable && hasDesc) : !disable;
     return (
       <Fragment>
         <Grid container spacing={3}>
-          <form className={styles.form}>
-          <Grid>
+          <Grid item md={12} xs={12}>
             <TextField
+              onChange={this.handleInput}
               id="bookName"
               label="Book Title"
-              // className={classes.textField}
-              value=""
+              value={bookTitle}
               type="text"
-              name="subgenreName"
+              name="bookTitle"
               margin="normal"
               variant="outlined"
               fullWidth
             />
           </Grid>
-          <Grid>
-            <TextField
-              id="bookAuthor"
-              label="Author"
-              // className={classes.textField}
-              value=""
-              type="text"
-              name="subgenreName"
-              margin="normal"
-              variant="outlined"
-              fullWidth
-            />
+          <Grid item md={12} xs={12}>
+            <FormControl fullWidth variant="outlined">
+              <InputLabel htmlFor="book-author">Author</InputLabel>
+              <Select
+                value={author}
+                onChange={this.handleInput}
+                native
+                input={
+                  <OutlinedInput
+                    name="author"
+                    labelWidth={50}
+                    id="book-author"
+                  />
+                }
+              >
+                <option value="" />
+                {bookAuthors.map(b => (
+                  <option key={b} value={b}>
+                    {b}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
-          <FormControl fullWidth variant="outlined">
-            <InputLabel 
-            // ref={inputLabel} 
-            htmlFor="book-author">
-              Author
-            </InputLabel>
-            <Select
-              native
-              input={
-                <OutlinedInput 
-                  name="author" 
-                  // labelWidth={labelWidth} 
-                  id="book-author" />
-              }
-            >
-              <option value="" />
-              <option value={10}>Ten</option>
-              <option value={20}>Twenty</option>
-              <option value={30}>Thirty</option>
-            </Select>
-          </FormControl>
-          <Grid>
+          <Grid item md={12} xs={12}>
             <TextField
               fullWidth
+              onChange={this.handleInput}
               id="isbn"
               label="ISBN"
-              // className={classes.textField}
-              value=""
+              value={isbn}
               type="text"
               name="isbn"
               margin="normal"
               variant="outlined"
             />
           </Grid>
-          <FormControl fullWidth variant="outlined">
-            <InputLabel 
-            // ref={inputLabel} 
-            htmlFor="book-publisher">
-              Publisher
-            </InputLabel>
-            <Select
-              native
-              input={
-                <OutlinedInput 
-                  name="age" 
-                  // labelWidth={labelWidth} 
-                  id="book-publisher" />
-              }
-            >
-              <option value="" />
-              <option value={10}>Ten</option>
-              <option value={20}>Twenty</option>
-              <option value={30}>Thirty</option>
-            </Select>
-          </FormControl>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <KeyboardDatePicker
-            disableToolbar
-            variant="inline"
-            format="MM/dd/yyyy"
-            margin="normal"
-            id="date-picker-inline"
-            label="Date published"
-            value={new Date()}
-            // onChange={handleDateChange}
-            KeyboardButtonProps={{
-              'aria-label': 'change date',
-            }}
-          />
-          </MuiPickersUtilsProvider>
-          <Grid>
+          <Grid item md={12} xs={12}>
+            <FormControl fullWidth variant="outlined">
+              <InputLabel htmlFor="book-publisher">Publisher</InputLabel>
+              <Select
+                value={publisher}
+                onChange={this.handleInput}
+                native
+                input={
+                  <OutlinedInput
+                    name="publisher"
+                    labelWidth={70}
+                    id="book-publisher"
+                  />
+                }
+              >
+                <option value="" />
+                {bookPublishers.map(b => (
+                  <option key={b} value={b}>
+                    {b}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                disableToolbar
+                variant="inline"
+                format="MM/dd/yyyy"
+                margin="normal"
+                id="date-picker-inline"
+                label="Date published"
+                value={publishDate}
+                onChange={handleDateChange}
+                KeyboardButtonProps={{
+                  "aria-label": "change date"
+                }}
+              />
+            </MuiPickersUtilsProvider>
+          </Grid>
+          <Grid item md={12} xs={12}>
             <TextField
               id="pagenum"
               label="Number of pages"
-              // className={classes.textField}
-              value=""
-              type="text"
+              onChange={this.handleInput}
+              value={pagenum}
+              type="number"
               name="pagenum"
               margin="normal"
               variant="outlined"
-              style={{minWidth: 180}}
+              style={{ minWidth: 180 }}
             />
           </Grid>
-          <FormControl classes={styles.formatWidth} style={{minWidth: 240}} variant="outlined">
-            <InputLabel 
-            // ref={inputLabel} 
-            htmlFor="format">
-              Format
-            </InputLabel>
-            <Select
-              fullWidth
-              native
-              input={
-                <OutlinedInput 
-                  name="Format" 
-                  // labelWidth={labelWidth} 
-                  id="format" />
-              }
+          <Grid item md={12} xs={12}>
+            <FormControl
+              style={{
+                minWidth: 240,
+                width: pageWidth <= 768 ? "100%" : "auto"
+              }}
+              variant="outlined"
             >
-              <option value="" />
-              <option value={10}>Ten</option>
-              <option value={20}>Twenty</option>
-              <option value={30}>Thirty</option>
-            </Select>
-          </FormControl>
-          <Grid>
+              <InputLabel htmlFor="format">Format</InputLabel>
+              <Select
+                value={format}
+                onChange={this.handleInput}
+                fullWidth
+                native
+                input={
+                  <OutlinedInput name="format" labelWidth={50} id="format" />
+                }
+              >
+                <option value="" />
+                {bookFormats.map(b => (
+                  <option key={b} value={b}>
+                    {b}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item md={12}>
             <TextField
-              style={{minWidth: 240, marginRight: 30}}
+              style={{
+                minWidth: 240,
+                marginRight: 30,
+                width: pageWidth <= 768 ? "100%" : "auto"
+              }}
+              onChange={this.handleInput}
               id="edition"
               label="Edition"
-              // className={classes.textField}
-              value=""
+              value={edition}
               type="text"
               name="edition"
               margin="normal"
               variant="outlined"
             />
-            <FormControl margin="normal" variant="outlined" style={{minWidth: 240}}>
-            <InputLabel 
-            // ref={inputLabel} 
-            htmlFor="edition-language">
-              Edition Language
-            </InputLabel>
-            <Select
-              native
-              input={
-                <OutlinedInput 
-                  name="Format" 
-                  // labelWidth={labelWidth} 
-                  id="edition-language" />
-              }
+            <FormControl
+              margin="normal"
+              variant="outlined"
+              style={{
+                minWidth: 240,
+                width: pageWidth <= 768 ? "100%" : "auto"
+              }}
             >
-              <option value="" />
-              <option value={10}>Ten</option>
-              <option value={20}>Twenty</option>
-              <option value={30}>Thirty</option>
-            </Select>
-          </FormControl>
+              <InputLabel htmlFor="edition-language">
+                Edition Language
+              </InputLabel>
+              <Select
+                value={editionLagnuage}
+                onChange={this.handleInput}
+                native
+                input={
+                  <OutlinedInput
+                    name="editionLagnuage"
+                    labelWidth={125}
+                    id="edition-language"
+                  />
+                }
+              >
+                <option value="" />
+                {bookLanguages.map(b => (
+                  <option key={b} value={b}>
+                    {b}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
-          {/* <FormControl variant="outlined">
-            <InputLabel 
-            // ref={inputLabel} 
-            htmlFor="edition-language">
-              Edition Language
-            </InputLabel>
-            <Select
-              native
-              input={
-                <OutlinedInput 
-                  name="Format" 
-                  // labelWidth={labelWidth} 
-                  id="edition-language" />
-              }
-            >
-              <option value="" />
-              <option value={10}>Ten</option>
-              <option value={20}>Twenty</option>
-              <option value={30}>Thirty</option>
-            </Select>
-          </FormControl> */}
-        </form>
+          {showDesc && (
+            <Grid item md={12}>
+              <p className={styles.paragraph}>Description</p>
+              <Editor
+                editorClassName={styles.editorMain}
+                onEditorStateChange={handleDescriptionText}
+                toolbar={{
+                  options: ["inline", "fontSize", "textAlign", "link"],
+                  inline: { inDropdown: true },
+                  textAlign: { inDropdown: true },
+                  link: { inDropdown: true }
+                }}
+              />
+            </Grid>
+          )}
         </Grid>
-        <ControlButtons 
+        <ControlButtons
           step={step}
           nextStep={nextStep}
           prevStep={prevStep}
-          // disabled={!subgenreTitle}
+          disabled={disabled}
         />
       </Fragment>
     );

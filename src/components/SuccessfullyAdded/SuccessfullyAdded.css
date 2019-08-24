@@ -1,0 +1,21 @@
+.imageWrap {
+  text-align: center;
+
+  img {
+    width: 185px;
+    height: auto;
+  }
+
+  p {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 40px;
+  }
+}
+
+.buttonNew {
+  width: 100%;
+  @media (min-width: 769px) {
+    width: 400px;
+  }
+}
