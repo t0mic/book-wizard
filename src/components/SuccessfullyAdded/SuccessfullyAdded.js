@@ -1,7 +1,6 @@
 import React, { Fragment } from "react";
-// import { makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
+import PropTypes from "prop-types";
+import { Grid, Button } from "@material-ui/core";
 import checkmark from "../../images/checkmark.png";
 
 import styles from "./SuccessfullyAdded.css";
@@ -35,3 +34,7 @@ export default function SuccessfullyAdded(props) {
     </Fragment>
   );
 }
+
+SuccessfullyAdded.propTypes = {
+  handleResetState: PropTypes.func.isRequired
+};

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Container from "@material-ui/core/Container";
 import ChooseGenre from "../ChooseGenre/ChooseGenre";
@@ -19,6 +20,19 @@ import {
 } from "../../Store/Reducer/Reducer";
 
 class FormHolder extends Component {
+  static propTypes = {
+    handleDateChange: PropTypes.func.isRequired,
+    handleResetState: PropTypes.func.isRequired,
+    handleDescriptionText: PropTypes.func.isRequired,
+    handleInputChange: PropTypes.func.isRequired,
+    handleDescription: PropTypes.func.isRequired,
+    handleSubgenreTitle: PropTypes.func.isRequired,
+    selectSubgenre: PropTypes.func.isRequired,
+    prevStep: PropTypes.func.isRequired,
+    nextStep: PropTypes.func.isRequired,
+    selectGenre: PropTypes.func.isRequired,
+    state: PropTypes.object.isRequired
+  };
   state = {
     pageWidth: window.innerWidth
   };
@@ -128,7 +142,16 @@ class FormHolder extends Component {
       case 5:
         return <SuccessfullyAdded handleResetState={handleResetState} />;
       default:
-        return <h1>Default view</h1>;
+        return (
+          <ChooseGenre
+            step={step}
+            genres={genres}
+            selectGenre={selectGenre}
+            selectedGenreId={selectedGenreId}
+            nextStep={nextStep}
+            prevStep={prevStep}
+          />
+        );
     }
   };
 

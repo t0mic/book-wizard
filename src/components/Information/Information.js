@@ -1,11 +1,14 @@
 import React, { Component, Fragment } from "react";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
+import PropTypes from "prop-types";
+import {
+  Grid,
+  TextField,
+  OutlinedInput,
+  InputLabel,
+  FormControl,
+  Select
+} from "@material-ui/core";
 import ControlButtons from "../ControlButtons/ControlButtons";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
 import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
@@ -23,6 +26,16 @@ import {
 import styles from "./Information.css";
 
 class Information extends Component {
+  static propTypes = {
+    step: PropTypes.number.isRequired,
+    nextStep: PropTypes.func.isRequired,
+    prevStep: PropTypes.func.isRequired,
+    informationForm: PropTypes.object.isRequired,
+    pageWidth: PropTypes.number.isRequired,
+    handleDescriptionText: PropTypes.func.isRequired,
+    handleDateChange: PropTypes.func.isRequired,
+    showDesc: PropTypes.bool.isRequired
+  };
   constructor(props) {
     super(props);
 

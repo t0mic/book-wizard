@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
+import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
+import { Grid, Paper } from "@material-ui/core";
 import ControlButtons from "../ControlButtons/ControlButtons";
 
 import styles from "./ChooseGenre.css";
@@ -67,3 +67,15 @@ export default function ChooseGenre(props) {
     </Fragment>
   );
 }
+
+ChooseGenre.propTypes = {
+  step: PropTypes.number.isRequired,
+  genres: PropTypes.array.isRequired,
+  selectGenre: PropTypes.func.isRequired,
+  selectedGenreId: PropTypes.oneOfType([
+    PropTypes.string.isRequired,
+    PropTypes.number.isRequired
+  ]),
+  nextStep: PropTypes.func.isRequired,
+  prevStep: PropTypes.func.isRequired
+};
