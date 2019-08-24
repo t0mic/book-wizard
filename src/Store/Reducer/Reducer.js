@@ -107,6 +107,7 @@ function reducer(state = initialState, action) {
       if (newState.selectedGenreId !== data.id) {
         newState.selectedGenreId = data.id;
         newState.selectedSubgenreId = null;
+        newState.informationForm = { ...informationForm };
       } else {
         newState.selectedGenreId = null;
         newState.selectedSubgenreId = null;
@@ -122,6 +123,7 @@ function reducer(state = initialState, action) {
         newState.selectedSubgenreId = data.id;
         newState.subgenreTitle = "";
         newState.subgenreDescription = false;
+        newState.informationForm = { ...informationForm };
       } else {
         newState.selectedSubgenreId = null;
       }

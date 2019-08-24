@@ -258,6 +258,7 @@ class Information extends Component {
               <Editor
                 editorClassName={styles.editorMain}
                 onEditorStateChange={handleDescriptionText}
+                defaultEditorState={description}
                 toolbar={{
                   options: ["inline", "fontSize", "textAlign", "link"],
                   inline: { inDropdown: true },
