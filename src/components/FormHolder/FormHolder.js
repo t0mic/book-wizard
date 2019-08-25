@@ -6,6 +6,7 @@ import ChooseGenre from "../ChooseGenre/ChooseGenre";
 import CreateSubgenre from "../CreateSubgenre/CreateSubgenre";
 import Information from "../Information/Information";
 import SuccessfullyAdded from "../SuccessfullyAdded/SuccessfullyAdded";
+import HeaderCounter from "../HeaderCounter/HeaderCounter";
 import {
   selectGenre,
   nextStep,
@@ -157,13 +158,12 @@ class FormHolder extends Component {
 
   render() {
     const {
-      state: { step }
+      state: { step, selectedSubgenreId }
     } = this.props;
 
     return (
       <Container maxWidth="md">
-        {/* header with counter */}
-        <h1>Step: {step}</h1>
+        <HeaderCounter step={step} selectedSubgenreId={selectedSubgenreId} />
         {this.renderSteps()}
       </Container>
     );

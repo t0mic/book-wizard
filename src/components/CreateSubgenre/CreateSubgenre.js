@@ -16,7 +16,7 @@ export default function CreateSubgenre(props) {
   return (
     <Fragment>
       <Grid container spacing={3}>
-        <Grid item md={12}>
+        <Grid item md={12} sm={12} xs={12}>
           <TextField
             fullWidth
             id="subgenreName"
@@ -31,7 +31,7 @@ export default function CreateSubgenre(props) {
             }}
           />
         </Grid>
-        <Grid item md={12}>
+        <Grid item md={12} sm={12} xs={12}>
           <FormControlLabel
             control={
               <Checkbox

@@ -217,7 +217,7 @@ class Information extends Component {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item md={12}>
+          <Grid item md={12} xs={12}>
             <TextField
               style={{
                 minWidth: 240,

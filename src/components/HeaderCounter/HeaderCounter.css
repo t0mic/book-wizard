@@ -1,0 +1,75 @@
+.circle {
+  display: inline-block;
+  width: 4rem;
+  height: 4rem;
+  line-height: 4rem;
+  border-radius: 100%;
+  background: rgba(0, 0, 0, 0.12);
+  color: rgba(0, 0, 0, 0.26);
+  margin-right: 2rem;
+  position: relative;
+  text-align: center;
+  font-size: 25px;
+
+  p {
+    margin: 0;
+    font-size: 20px;
+  }
+
+  &:after {
+    @media (min-width: 940px) {
+      content: "";
+      width: 8.4rem;
+      background-color: #d8d8d8;
+      height: 2px;
+      position: absolute;
+      top: 2rem;
+      right: 4.9rem;
+    }
+  }
+}
+
+.noLine {
+  &:before {
+    display: none;
+  }
+  &:after {
+    display: none;
+  }
+}
+
+.active {
+  background-color: #3f51b5;
+  color: white;
+  p {
+    color: #3f51b5;
+  }
+}
+
+.stepDesc {
+  color: rgba(0, 0, 0, 0.26);
+}
+.stepDescGenre {
+  @media (min-width: 769px) {
+    position: relative;
+    left: 8px;
+  }
+  color: rgba(0, 0, 0, 0.26);
+}
+.stepDescNew {
+  @media (min-width: 769px) {
+    position: relative;
+    right: 30px;
+  }
+  color: rgba(0, 0, 0, 0.26);
+}
+.stepDescInfo {
+  @media (min-width: 769px) {
+    position: relative;
+    right: 7px;
+  }
+  color: rgba(0, 0, 0, 0.26);
+}
+.stepDescActive {
+  color: #3f51b5;
+}
